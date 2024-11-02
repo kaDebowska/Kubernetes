@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nfs-copy-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: nfs-copy
+        image: alpine
+        command: ["sh", "-c", "echo '<html><body><h1>Sample HTML Content</h1></body></html>' > /mnt/nfs/sample.html"]
+        volumeMounts:
+        - name: nfs-storage
+          mountPath: /mnt/nfs
+      restartPolicy: Never
+      volumes:
+      - name: nfs-storage
+        persistentVolumeClaim:
+          claimName: nfs-pvc
+  backoffLimit: 4
+
